@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Flag Mega Jam & Studio! 🥁🎸🎺</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e1e2f, #11111d);
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            margin-bottom: 5px;
+            font-size: 2.5rem;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        p {
+            margin-bottom: 15px;
+            color: #aaa;
+            font-size: 1.1rem;
+        }
+
+        .controls {
+            margin-bottom: 15px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 25px;
+            max-width: 1200px;
+        }
+
+        .tab-btn {
+            background-color: #2a2a40;
+            color: #ccc;
+            border: 1px solid #444466;
+            padding: 8px 16px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn:hover {
+            background-color: #3b3b5c;
+            color: #fff;
+        }
+
+        .tab-btn.active {
+            background-color: #ff0055;
+            color: #fff;
+            border-color: #ff0055;
+            box-shadow: 0 0 12px rgba(255, 0, 85, 0.4);
+        }
+
+        .btn {
+            color: white;
+            border: none;
+            padding: 10px 22px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
+        }
+
+        .create-btn {
+            background-color: #7000ff;
+            box-shadow: 0 4px 12px rgba(112, 0, 255, 0.4);
+        }
+        .create-btn:hover {
+            transform: scale(1.05);
+            background-color: #8822ff;
+        }
+
+        .song-btn {
+            background-color: #00e5ff;
+            color: #111;
+            box-shadow: 0 4px 12px rgba(0, 229, 255, 0.4);
+        }
+
+        .song-btn:hover {
+            transform: scale(1.05);
+            background-color: #33ebff;
+        }
+
+        .song-btn.playing {
+            background-color: #ffbe0b;
+            color: #111;
+            box-shadow: 0 4px 12px rgba(255, 190, 11, 0.5);
+        }
+
+        .stop-btn {
+            background-color: #ff3366;
+            box-shadow: 0 4px 10px rgba(255, 51, 102, 0.4);
+        }
+
+        .stop-btn:hover {
+            transform: scale(1.05);
+            background-color: #ff0044;
+        }
+
+        .flag-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
+            gap: 16px;
+            width: 100%;
+            max-width: 1400px;
+            padding: 10px;
+        }
+
+        .flag-card {
+            background-color: #2a2a40;
+            border-radius: 12px;
+            padding: 12px 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            transition: box-shadow 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+            user-select: none;
+            border: 2px solid transparent;
+            position: relative;
+        }
+
+        .flag-card:hover {
+            box-shadow: 0 8px 20px rgba(255, 255, 255, 0.15);
+        }
+
+        .flag-card.active {
+            box-shadow: 0 0 25px var(--glow-color, #ff0055);
+            border: 2px solid var(--glow-color, #ff0055);
+            background-color: #353554;
+        }
+
+        .delete-card-btn {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: #ff3366;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            font-size: 11px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            z-index: 10;
+        }
+
+        .delete-card-btn:hover {
+            background: #ff0033;
+            transform: scale(1.15);
+        }
+
+        .flag-wrapper {
+            position: relative;
+            width: 90px;
+            height: 60px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+        }
+
+        .flag-img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            will-change: transform;
+            display: block;
+            border-radius: 2px;
+            filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.5));
+            animation-iteration-count: infinite;
+            animation-timing-function: ease-in-out;
+            animation-direction: alternate;
+            backface-visibility: hidden;
+        }
+
+        .country-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+        }
+
+        .instrument-tag {
+            font-size: 0.7rem;
+            color: #8888aa;
+            margin-top: 4px;
+        }
+
+        .empty-msg {
+            grid-column: 1 / -1;
+            text-align: center;
+            color: #8888aa;
+            font-size: 1.2rem;
+            padding: 40px;
+        }
+
+        /* --- MODAL STUDIO --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal-card {
+            background: #232338;
+            border: 2px solid #555588;
+            border-radius: 20px;
+            padding: 25px;
+            width: 90%;
+            max-width: 520px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 0 30px rgba(112, 0, 255, 0.5);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .modal-card h2 {
+            margin: 0;
+            text-align: center;
+            color: #00e5ff;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label {
+            font-size: 0.9rem;
+            color: #ccc;
+            font-weight: 600;
+        }
+
+        .form-group input[type="text"], .form-group select {
+            background: #151525;
+            border: 1px solid #444466;
+            color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
+
+        canvas#flagCanvas {
+            background: #ffffff;
+            border-radius: 8px;
+            cursor: crosshair;
+            border: 2px solid #444466;
+            touch-action: none;
+        }
+
+        .canvas-tools {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-small {
+            background: #444466;
+            color: #fff;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .btn-small:hover {
+            background: #666699;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        /* --- BASE ANIMATION KEYFRAMES --- */
+        @keyframes animSpinFast { 0% { transform: rotate(0deg) scale(1); } 50% { transform: rotate(180deg) scale(1.15); } 100% { transform: rotate(360deg) scale(1); } }
+        @keyframes animGoCrazy { 0% { transform: translate(0, 0) rotate(0deg) scale(1); } 20% { transform: translate(-8px, 6px) rotate(-15deg) scale(1.2); } 40% { transform: translate(8px, -6px) rotate(15deg) scale(0.9); } 60% { transform: translate(-6px, -8px) rotate(-20deg) scale(1.1); } 80% { transform: translate(6px, 8px) rotate(20deg) scale(0.95); } 100% { transform: translate(0, 0) rotate(0deg) scale(1); } }
+        @keyframes anim3DFlip { 0% { transform: rotateY(0deg) rotateX(0deg); } 50% { transform: rotateY(180deg) rotateX(20deg) scale(1.15); } 100% { transform: rotateY(360deg) rotateX(0deg); } }
+        @keyframes animElasticBounce { 0% { transform: scale(1, 1); } 30% { transform: scale(1.35, 0.75); } 50% { transform: scale(0.75, 1.35); } 70% { transform: scale(1.15, 0.85); } 100% { transform: scale(1, 1); } }
+        @keyframes animSuperWave { 0% { transform: rotate(-25deg) skewX(-15deg); } 100% { transform: rotate(25deg) skewX(15deg); } }
+        @keyframes animHyperPulse { 0% { transform: scale(1); filter: brightness(1); } 100% { transform: scale(1.25); filter: brightness(1.6); } }
+        @keyframes animBarrelRoll { 0% { transform: rotateZ(0deg) translateY(0); } 50% { transform: rotateZ(180deg) translateY(-8px); } 100% { transform: rotateZ(360deg) translateY(0); } }
+        @keyframes animZigZag { 0% { transform: translateX(-8px) skewY(-5deg); } 100% { transform: translateX(8px) skewY(5deg); } }
+        @keyframes animJellyWiggle { 0% { transform: skewX(-12deg) skewY(4deg) scale(1); } 50% { transform: skewX(12deg) skewY(-4deg) scale(1.1); } 100% { transform: skewX(-12deg) skewY(4deg) scale(1); } }
+        @keyframes animOrbitTilt { 0% { transform: rotate(-10deg) translateY(-5px) scale(0.95); } 50% { transform: rotate(10deg) translateY(5px) scale(1.15); } 100% { transform: rotate(-10deg) translateY(-5px) scale(0.95); } }
+
+        @keyframes animCustomCubeSpin {
+            0% { transform: perspective(400deg) rotateY(0deg) rotateZ(0deg) scale(1); }
+            50% { transform: perspective(400deg) rotateY(180deg) rotateZ(15deg) scale(1.3); }
+            100% { transform: perspective(400deg) rotateY(360deg) rotateZ(0deg) scale(1); }
+        }
+        @keyframes animCustomWarpStretch {
+            0% { transform: scale(1, 1) rotate(0deg); }
+            25% { transform: scale(1.8, 0.4) rotate(-10deg); }
+            50% { transform: scale(0.4, 1.8) rotate(10deg); }
+            75% { transform: scale(1.4, 0.6) rotate(-5deg); }
+            100% { transform: scale(1, 1) rotate(0deg); }
+        }
+        @keyframes animCustomPulseGlow {
+            0% { transform: scale(1) translateY(0); filter: drop-shadow(0 0 2px #ff00ea); }
+            50% { transform: scale(1.35) translateY(-10px); filter: drop-shadow(0 0 18px #00ffff); }
+            100% { transform: scale(1) translateY(0); filter: drop-shadow(0 0 2px #ff00ea); }
+        }
+        @keyframes animCustomBounceCascade {
+            0% { transform: translateY(0) rotate(0deg); }
+            30% { transform: translateY(-18px) rotate(-12deg) scale(1.1); }
+            60% { transform: translateY(6px) rotate(12deg) scale(0.95); }
+            80% { transform: translateY(-8px) rotate(-5deg) scale(1.05); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+        @keyframes animCustomOrbitalWobble {
+            0% { transform: rotate(0deg) translateX(0px) rotate(0deg); }
+            25% { transform: rotate(90deg) translateX(10px) rotate(-90deg) scale(1.2); }
+            50% { transform: rotate(180deg) translateX(0px) rotate(-180deg) scale(0.85); }
+            75% { transform: rotate(270deg) translateX(-10px) rotate(-270deg) scale(1.2); }
+            100% { transform: rotate(360deg) translateX(0px) rotate(-360deg) scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🥁 Global Flag Mega Band 🎸</h1>
+    <p>Filter by region or create your very own flag, beat, and dance! 🎶✨</p>
+
+    <div class="controls">
+        <button class="btn create-btn" onclick="openModal()">➕ Create Custom Country</button>
+        <button class="btn song-btn" id="autoSongBtn" onclick="toggleAutoSong()">✨ Random Auto Jam</button>
+        <button class="btn stop-btn" onclick="stopAllBeats()">⏹️ Stop All Beats</button>
+    </div>
+
+    <div class="tabs" id="tabContainer"></div>
+
+    <div class="flag-grid" id="flagGrid"></div>
+
+    <!-- MODAL CREATOR -->
+    <div class="modal-overlay" id="creatorModal">
+        <div class="modal-card">
+            <h2>🎨 Country Creator Studio</h2>
+            
+            <div class="form-group">
+                <label>Country Name:</label>
+                <input type="text" id="newCountryName" placeholder="e.g. Pixelia" value="My Country">
+            </div>
+
+            <div class="form-group">
+                <label>Draw Flag Canvas:</label>
+                <canvas id="flagCanvas" width="300" height="200"></canvas>
+                <div class="canvas-tools">
+                    <input type="color" id="brushColor" value="#ff0055">
+                    <label style="font-size:0.8rem;">Size:</label>
+                    <input type="range" id="brushSize" min="3" max="30" value="12">
+                    <button class="btn-small" onclick="clearCanvas()">🗑️ Clear</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Select Sound Beat (200+ Sounds Available):</label>
+                <select id="soundSelect"></select>
+            </div>
+
+            <div class="form-group">
+                <label>Select Flag Animation (200+ Animations Available):</label>
+                <select id="animSelect"></select>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-small" style="background:#ff3366;" onclick="closeModal()">Cancel</button>
+                <button class="btn-small" style="background:#00e5ff; color:#111; font-weight:bold;" onclick="saveCustomCountry()">🚀 Save Country</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const countries = [
+            // Europe
+            { name: "Albania", code: "al", region: "europe", type: "bass", note: 110.00, tag: "A2 Bass" },
+            { name: "Andorra", code: "ad", region: "europe", type: "synth", note: 246.94, tag: "B3 Synth" },
+            { name: "Austria", code: "at", region: "europe", type: "chime", note: 523.25, tag: "C5 Chime" },
+            { name: "Belarus", code: "by", region: "europe", type: "bass", note: 146.83, tag: "D3 Bass" },
+            { name: "Belgium", code: "be", region: "europe", type: "bass", note: 110.00, tag: "A2 Bass" },
+            { name: "Bosnia & Herzegovina", code: "ba", region: "europe", type: "bass", note: 164.81, tag: "E3 Bass" },
+            { name: "Bulgaria", code: "bg", region: "europe", type: "chime", note: 783.99, tag: "G5 Chime" },
+            { name: "Croatia", code: "hr", region: "europe", type: "chime", note: 659.25, tag: "E5 Chime" },
+            { name: "Czech Republic", code: "cz", region: "europe", type: "bass", note: 196.00, tag: "G3 Bass" },
+            { name: "Denmark", code: "dk", region: "europe", type: "synth", note: 369.99, tag: "F#4 Synth" },
+            { name: "Estonia", code: "ee", region: "europe", type: "synth", note: 440.00, tag: "A4 Synth" },
+            { name: "Finland", code: "fi", region: "europe", type: "chime", note: 698.46, tag: "F5 Chime" },
+            { name: "France", code: "fr", region: "europe", type: "synth", note: 349.23, tag: "F4 Synth" },
+            { name: "Germany", code: "de", region: "europe", type: "bass", note: 123.47, tag: "B2 Bass" },
+            { name: "Greece", code: "gr", region: "europe", type: "synth", note: 415.30, tag: "G4 Synth" },
+            { name: "Hungary", code: "hu", region: "europe", type: "bass", note: 130.81, tag: "C3 Bass" },
+            { name: "Iceland", code: "is", region: "europe", type: "chime", note: 783.99, tag: "G5 Chime" },
+            { name: "Ireland", code: "ie", region: "europe", type: "chime", note: 880.00, tag: "A5 Chime" },
+            { name: "Italy", code: "it", region: "europe", type: "synth", note: 440.00, tag: "A4 Synth" },
+            { name: "Kosovo", code: "xk", region: "europe", type: "synth", note: 659.25, tag: "E5 Synth" },
+            { name: "Latvia", code: "lv", region: "europe", type: "chime", note: 1864.66, tag: "A#6 Chime" },
+            { name: "Liechtenstein", code: "li", region: "europe", type: "chime", note: 1975.53, tag: "B6 Chime" },
+            { name: "Lithuania", code: "lt", region: "europe", type: "synth", note: 783.99, tag: "G5 Synth" },
+            { name: "Luxembourg", code: "lu", region: "europe", type: "chime", note: 2093.00, tag: "C7 Chime" },
+            { name: "Malta", code: "mt", region: "europe", type: "synth", note: 830.61, tag: "G#5 Synth" },
+            { name: "Moldova", code: "md", region: "europe", type: "synth", note: 880.00, tag: "A5 Synth" },
+            { name: "Monaco", code: "mc", region: "europe", type: "chime", note: 2637.02, tag: "E7 Chime" },
+            { name: "Montenegro", code: "me", region: "europe", type: "synth", note: 932.33, tag: "A#5 Synth" },
+            { name: "Netherlands", code: "nl", region: "europe", type: "synth", note: 523.25, tag: "C5 Synth" },
+            { name: "North Macedonia", code: "mk", region: "europe", type: "synth", note: 1174.66, tag: "D6 Synth" },
+            { name: "Norway", code: "no", region: "europe", type: "synth", note: 587.33, tag: "D5 Synth" },
+            { name: "Poland", code: "pl", region: "europe", type: "synth", note: 622.25, tag: "D#5 Synth" },
+            { name: "Portugal", code: "pt", region: "europe", type: "synth", note: 659.25, tag: "E5 Synth" },
+            { name: "Romania", code: "ro", region: "europe", type: "synth", note: 739.99, tag: "F#5 Synth" },
+            { name: "Russia", code: "ru", region: "europe", type: "bass", note: 82.41, tag: "E2 Low Bass" },
+            { name: "San Marino", code: "sm", region: "europe", type: "synth", note: 1396.91, tag: "F6 Synth" },
+            { name: "Serbia", code: "rs", region: "europe", type: "synth", note: 1479.98, tag: "F#6 Synth" },
+            { name: "Slovakia", code: "sk", region: "europe", type: "bass", note: 349.23, tag: "F4 Bass" },
+            { name: "Slovenia", code: "si", region: "europe", type: "synth", note: 1567.98, tag: "G6 Synth" },
+            { name: "Spain", code: "es", region: "europe", type: "synth", note: 783.99, tag: "G5 Synth" },
+            { name: "Sweden", code: "se", region: "europe", type: "bass", note: 196.00, tag: "G3 Bass" },
+            { name: "Switzerland", code: "ch", region: "europe", type: "chime", note: 1318.51, tag: "E6 Chime" },
+            { name: "Ukraine", code: "ua", region: "europe", type: "synth", note: 830.61, tag: "G#5 Synth" },
+            { name: "United Kingdom", code: "gb", region: "europe", type: "bass", note: 87.31, tag: "F2 Bass" },
+            { name: "Vatican City", code: "va", region: "europe", type: "chime", note: 2489.02, tag: "D#7 Chime" },
+
+            // Asia
+            { name: "Afghanistan", code: "af", region: "asia", type: "synth", note: 220.00, tag: "A3 Synth" },
+            { name: "Armenia", code: "am", region: "asia", type: "bass", note: 130.81, tag: "C3 Bass" },
+            { name: "Azerbaijan", code: "az", region: "asia", type: "synth", note: 277.18, tag: "C#4 Synth" },
+            { name: "Bahrain", code: "bh", region: "asia", type: "hihat", note: 8500, tag: "Crisp Hat" },
+            { name: "Bangladesh", code: "bd", region: "asia", type: "snare", note: 1100, tag: "Warm Snare" },
+            { name: "Bhutan", code: "bt", region: "asia", type: "chime", note: 698.46, tag: "F5 Chime" },
+            { name: "Brunei", code: "bn", region: "asia", type: "hihat", note: 9000, tag: "Hi-Hat" },
+            { name: "Cambodia", code: "kh", region: "asia", type: "chime", note: 587.33, tag: "D5 Chime" },
+            { name: "China", code: "cn", region: "asia", type: "synth", note: 329.63, tag: "E4 Synth" },
+            { name: "Cyprus", code: "cy", region: "asia", type: "chime", note: 987.77, tag: "B5 Chime" },
+            { name: "East Timor", code: "tl", region: "asia", type: "snare", note: 1400, tag: "Sharp Snare" },
+            { name: "Georgia", code: "ge", region: "asia", type: "synth", note: 466.16, tag: "A#4 Synth" },
+            { name: "India", code: "in", region: "asia", type: "synth", note: 392.00, tag: "G4 Synth" },
+            { name: "Indonesia", code: "id", region: "asia", type: "clap", note: 400, tag: "Hand Clap" },
+            { name: "Iran", code: "ir", region: "asia", type: "synth", note: 554.37, tag: "C#5 Synth" },
+            { name: "Iraq", code: "iq", region: "asia", type: "bass", note: 261.63, tag: "C4 Bass" },
+            { name: "Israel", code: "il", region: "asia", type: "synth", note: 587.33, tag: "D5 Synth" },
+            { name: "Japan", code: "jp", region: "asia", type: "chime", note: 987.77, tag: "B5 Chime" },
+            { name: "Jordan", code: "jo", region: "asia", type: "hihat", note: 9600, tag: "Tick Hat" },
+            { name: "Kazakhstan", code: "kz", region: "asia", type: "synth", note: 622.25, tag: "D#5 Synth" },
+            { name: "Kuwait", code: "kw", region: "asia", type: "hihat", note: 9800, tag: "Metal Hat" },
+            { name: "Kyrgyzstan", code: "kg", region: "asia", type: "synth", note: 698.46, tag: "F5 Synth" },
+            { name: "Laos", code: "la", region: "asia", type: "synth", note: 466.16, tag: "A#4 Synth" },
+            { name: "Lebanon", code: "lb", region: "asia", type: "synth", note: 739.99, tag: "F#5 Synth" },
+            { name: "Malaysia", code: "my", region: "asia", type: "synth", note: 493.88, tag: "B4 Synth" },
+            { name: "Maldives", code: "mv", region: "asia", type: "chime", note: 2217.46, tag: "C#7 Chime" },
+            { name: "Mongolia", code: "mn", region: "asia", type: "bass", note: 98.00, tag: "G2 Bass" },
+            { name: "Myanmar", code: "mm", region: "asia", type: "synth", note: 987.77, tag: "B5 Synth" },
+            { name: "Nepal", code: "np", region: "asia", type: "chime", note: 1046.50, tag: "C6 Chime" },
+            { name: "North Korea", code: "kp", region: "asia", type: "bass", note: 329.63, tag: "E4 Bass" },
+            { name: "Oman", code: "om", region: "asia", type: "hihat", note: 9100, tag: "Click Hat" },
+            { name: "Pakistan", code: "pk", region: "asia", type: "synth", note: 554.37, tag: "C#5 Synth" },
+            { name: "Palestine", code: "ps", region: "asia", type: "synth", note: 1244.51, tag: "D#6 Synth" },
+            { name: "Philippines", code: "ph", region: "asia", type: "snare", note: 1800, tag: "Bright Snare" },
+            { name: "Qatar", code: "qa", region: "asia", type: "hihat", note: 9500, tag: "Sharp Hat" },
+            { name: "Saudi Arabia", code: "sa", region: "asia", type: "bass", note: 174.61, tag: "F3 Bass" },
+            { name: "Singapore", code: "sg", region: "asia", type: "synth", note: 698.46, tag: "F5 Synth" },
+            { name: "South Korea", code: "kr", region: "asia", type: "chime", note: 1174.66, tag: "D6 Chime" },
+            { name: "Sri Lanka", code: "lk", region: "asia", type: "synth", note: 1661.22, tag: "G#6 Synth" },
+            { name: "Syria", code: "sy", region: "asia", type: "bass", note: 369.99, tag: "F#4 Bass" },
+            { name: "Taiwan", code: "tw", region: "asia", type: "synth", note: 1760.00, tag: "A6 Synth" },
+            { name: "Tajikistan", code: "tj", region: "asia", type: "synth", note: 1864.66, tag: "A#6 Synth" },
+            { name: "Thailand", code: "th", region: "asia", type: "synth", note: 880.00, tag: "A5 Synth" },
+            { name: "Turkey", code: "tr", region: "asia", type: "synth", note: 1975.53, tag: "B6 Synth" },
+            { name: "Turkmenistan", code: "tm", region: "asia", type: "synth", note: 2093.00, tag: "C7 Synth" },
+            { name: "United Arab Emirates", code: "ae", region: "asia", type: "bass", note: 220.00, tag: "A3 Bass" },
+            { name: "Uzbekistan", code: "uz", region: "asia", type: "synth", note: 2217.46, tag: "C#7 Synth" },
+            { name: "Vietnam", code: "vn", region: "asia", type: "chime", note: 1567.98, tag: "G6 Chime" },
+            { name: "Yemen", code: "ye", region: "asia", type: "bass", note: 392.00, tag: "G4 Bass" },
+
+            // Africa
+            { name: "Algeria", code: "dz", region: "africa", type: "chime", note: 523.25, tag: "C5 Chime" },
+            { name: "Angola", code: "ao", region: "africa", type: "kick", note: 120, tag: "Sub Kick" },
+            { name: "Benin", code: "bj", region: "africa", type: "kick", note: 140, tag: "Punch Kick" },
+            { name: "Botswana", code: "bw", region: "africa", type: "clap", note: 480, tag: "Snap Clap" },
+            { name: "Burkina Faso", code: "bf", region: "africa", type: "snare", note: 1300, tag: "Rim Snare" },
+            { name: "Burundi", code: "bi", region: "africa", type: "kick", note: 150, tag: "Deep Kick" },
+            { name: "Cabo Verde", code: "cv", region: "africa", type: "synth", note: 329.63, tag: "E4 Synth" },
+            { name: "Cameroon", code: "cm", region: "africa", type: "bass", note: 174.61, tag: "F3 Bass" },
+            { name: "Central African Republic", code: "cf", region: "africa", type: "synth", note: 349.23, tag: "F4 Synth" },
+            { name: "Chad", code: "td", region: "africa", type: "kick", note: 160, tag: "Heavy Kick" },
+            { name: "Comoros", code: "km", region: "africa", type: "chime", note: 880.00, tag: "A5 Chime" },
+            { name: "Congo (Brazzaville)", code: "cg", region: "africa", type: "bass", note: 185.00, tag: "F#3 Bass" },
+            { name: "Congo (Kinshasa)", code: "cd", region: "africa", type: "kick", note: 170, tag: "Thud Kick" },
+            { name: "Djibouti", code: "dj", region: "africa", type: "hihat", note: 9200, tag: "Open Hat" },
+            { name: "Egypt", code: "eg", region: "africa", type: "hihat", note: 8000, tag: "Hi-Hat" },
+            { name: "Equatorial Guinea", code: "gq", region: "africa", type: "kick", note: 175, tag: "Club Kick" },
+            { name: "Eritrea", code: "er", region: "africa", type: "chime", note: 1174.66, tag: "D6 Chime" },
+            { name: "Eswatini", code: "sz", region: "africa", type: "bass", note: 220.00, tag: "A3 Bass" },
+            { name: "Ethiopia", code: "et", region: "africa", type: "snare", note: 1500, tag: "Tight Snare" },
+            { name: "Gabon", code: "ga", region: "africa", type: "kick", note: 180, tag: "Deep Kick" },
+            { name: "Gambia", code: "gm", region: "africa", type: "clap", note: 520, tag: "Bright Clap" },
+            { name: "Ghana", code: "gh", region: "africa", type: "kick", note: 190, tag: "Afro Kick" },
+            { name: "Guinea", code: "gn", region: "africa", type: "bass", note: 233.08, tag: "A#3 Bass" },
+            { name: "Guinea-Bissau", code: "gw", region: "africa", type: "snare", note: 1600, tag: "Dry Snare" },
+            { name: "Ivory Coast", code: "ci", region: "africa", type: "kick", note: 185, tag: "Tribal Kick" },
+            { name: "Kenya", code: "ke", region: "africa", type: "kick", note: 195, tag: "Power Kick" },
+            { name: "Lesotho", code: "ls", region: "africa", type: "bass", note: 277.18, tag: "C#4 Bass" },
+            { name: "Liberia", code: "lr", region: "africa", type: "clap", note: 540, tag: "Snap Clap" },
+            { name: "Libya", code: "ly", region: "africa", type: "hihat", note: 8700, tag: "Soft Hat" },
+            { name: "Madagascar", code: "mg", region: "africa", type: "kick", note: 200, tag: "Stomp Kick" },
+            { name: "Malawi", code: "mw", region: "africa", type: "snare", note: 1700, tag: "Crack Snare" },
+            { name: "Mali", code: "ml", region: "africa", type: "bass", note: 293.66, tag: "D4 Bass" },
+            { name: "Mauritania", code: "mr", region: "africa", type: "hihat", note: 8900, tag: "Shaker Hat" },
+            { name: "Mauritius", code: "mu", region: "africa", type: "clap", note: 560, tag: "Funky Clap" },
+            { name: "Morocco", code: "ma", region: "africa", type: "snare", note: 1500, tag: "Tight Snare" },
+            { name: "Mozambique", code: "mz", region: "africa", type: "kick", note: 210, tag: "Bass Kick" },
+            { name: "Namibia", code: "na", region: "africa", type: "bass", note: 311.13, tag: "D#4 Bass" },
+            { name: "Niger", code: "ne", region: "africa", type: "snare", note: 1750, tag: "Snap Snare" },
+            { name: "Nigeria", code: "ng", region: "africa", type: "kick", note: 180, tag: "Deep Kick" },
+            { name: "Rwanda", code: "rw", region: "africa", type: "kick", note: 225, tag: "Dynamic Kick" },
+            { name: "Sao Tome & Principe", code: "st", region: "africa", type: "snare", note: 1850, tag: "Rim Click" },
+            { name: "Senegal", code: "sn", region: "africa", type: "kick", note: 230, tag: "Pulse Kick" },
+            { name: "Seychelles", code: "sc", region: "africa", type: "chime", note: 3729.31, tag: "A#7 Chime" },
+            { name: "Sierra Leone", code: "sl", region: "africa", type: "clap", note: 620, tag: "Crisp Clap" },
+            { name: "Somalia", code: "so", region: "africa", type: "hihat", note: 9300, tag: "Air Hat" },
+            { name: "South Africa", code: "za", region: "africa", type: "clap", note: 550, tag: "Snap Clap" },
+            { name: "South Sudan", code: "ss", region: "africa", type: "kick", note: 240, tag: "Deep Sub" },
+            { name: "Sudan", code: "sd", region: "africa", type: "hihat", note: 9400, tag: "Sizzle Hat" },
+            { name: "Tanzania", code: "tz", region: "africa", type: "kick", note: 250, tag: "Club Kick" },
+            { name: "Togo", code: "tg", region: "africa", type: "snare", note: 1900, tag: "March Snare" },
+            { name: "Tunisia", code: "tn", region: "africa", type: "clap", note: 600, tag: "Sharp Clap" },
+            { name: "Uganda", code: "ug", region: "africa", type: "kick", note: 260, tag: "Stomper Kick" },
+            { name: "Zambia", code: "zm", region: "africa", type: "snare", note: 2000, tag: "High Snare" },
+            { name: "Zimbabwe", code: "zw", region: "africa", type: "kick", note: 270, tag: "Boom Kick" },
+
+            // North America
+            { name: "Antigua & Barbuda", code: "ag", region: "north_america", type: "chime", note: 587.33, tag: "D5 Chime" },
+            { name: "Bahamas", code: "bs", region: "north_america", type: "clap", note: 420, tag: "Beach Clap" },
+            { name: "Barbados", code: "bb", region: "north_america", type: "chime", note: 659.25, tag: "E5 Chime" },
+            { name: "Belize", code: "bz", region: "north_america", type: "synth", note: 293.66, tag: "D4 Synth" },
+            { name: "Canada", code: "ca", region: "north_america", type: "snare", note: 1200, tag: "Snare Drum" },
+            { name: "Costa Rica", code: "cr", region: "north_america", type: "synth", note: 369.99, tag: "F#4 Synth" },
+            { name: "Cuba", code: "cu", region: "north_america", type: "clap", note: 500, tag: "Salsa Clap" },
+            { name: "Dominica", code: "dm", region: "north_america", type: "chime", note: 1046.50, tag: "C6 Chime" },
+            { name: "Dominican Republic", code: "do", region: "north_america", type: "synth", note: 392.00, tag: "G4 Synth" },
+            { name: "El Salvador", code: "sv", region: "north_america", type: "synth", note: 415.30, tag: "G4 Synth" },
+            { name: "Grenada", code: "gd", region: "north_america", type: "chime", note: 1396.91, tag: "F6 Chime" },
+            { name: "Guatemala", code: "gt", region: "north_america", type: "synth", note: 493.88, tag: "B4 Synth" },
+            { name: "Haiti", code: "ht", region: "north_america", type: "synth", note: 523.25, tag: "C5 Synth" },
+            { name: "Honduras", code: "hn", region: "north_america", type: "bass", note: 246.94, tag: "B3 Bass" },
+            { name: "Jamaica", code: "jm", region: "north_america", type: "bass", note: 146.83, tag: "D3 Bass" },
+            { name: "Mexico", code: "mx", region: "north_america", type: "bass", note: 164.81, tag: "E3 Bass" },
+            { name: "Nicaragua", code: "ni", region: "north_america", type: "synth", note: 1108.73, tag: "C#6 Synth" },
+            { name: "Panama", code: "pa", region: "north_america", type: "clap", note: 580, tag: "Dance Clap" },
+            { name: "Saint Kitts & Nevis", code: "kn", region: "north_america", type: "chime", note: 3135.96, tag: "G7 Chime" },
+            { name: "Saint Lucia", code: "lc", region: "north_america", type: "chime", note: 3322.44, tag: "G#7 Chime" },
+            { name: "Saint Vincent", code: "vc", region: "north_america", type: "chime", note: 3520.00, tag: "A7 Chime" },
+            { name: "Trinidad & Tobago", code: "tt", region: "north_america", type: "chime", note: 4186.01, tag: "C8 Chime" },
+            { name: "United States", code: "us", region: "north_america", type: "synth", note: 987.77, tag: "B5 Synth" },
+
+            // South America
+            { name: "Argentina", code: "ar", region: "south_america", type: "synth", note: 261.63, tag: "C4 Synth" },
+            { name: "Bolivia", code: "bo", region: "south_america", type: "synth", note: 311.13, tag: "D4 Synth" },
+            { name: "Brazil", code: "br", region: "south_america", type: "synth", note: 293.66, tag: "D4 Synth" },
+            { name: "Chile", code: "cl", region: "south_america", type: "synth", note: 311.13, tag: "D#4 Synth" },
+            { name: "Colombia", code: "co", region: "south_america", type: "clap", note: 450, tag: "Pop Clap" },
+            { name: "Ecuador", code: "ec", region: "south_america", type: "bass", note: 207.65, tag: "G#3 Bass" },
+            { name: "Guyana", code: "gy", region: "south_america", type: "chime", note: 1567.98, tag: "G6 Chime" },
+            { name: "Paraguay", code: "py", region: "south_america", type: "synth", note: 1318.51, tag: "E6 Synth" },
+            { name: "Peru", code: "pe", region: "south_america", type: "chime", note: 1046.50, tag: "C6 Chime" },
+            { name: "Suriname", code: "sr", region: "south_america", type: "clap", note: 640, tag: "Bright Clap" },
+            { name: "Uruguay", code: "uy", region: "south_america", type: "chime", note: 1396.91, tag: "F6 Chime" },
+            { name: "Venezuela", code: "ve", region: "south_america", type: "synth", note: 2349.32, tag: "D7 Synth" },
+
+            // Oceania
+            { name: "Australia", code: "au", region: "oceania", type: "kick", note: 130, tag: "Low Kick" },
+            { name: "Fiji", code: "fj", region: "oceania", type: "chime", note: 1318.51, tag: "E6 Chime" },
+            { name: "Kiribati", code: "ki", region: "oceania", type: "chime", note: 1760.00, tag: "A6 Chime" },
+            { name: "Marshall Islands", code: "mh", region: "oceania", type: "chime", note: 2349.32, tag: "D7 Chime" },
+            { name: "Micronesia", code: "fm", region: "oceania", type: "chime", note: 2489.02, tag: "D#7 Chime" },
+            { name: "Nauru", code: "nr", region: "oceania", type: "chime", note: 2793.83, tag: "F7 Chime" },
+            { name: "New Zealand", code: "nz", region: "oceania", type: "kick", note: 160, tag: "Punch Kick" },
+            { name: "Palau", code: "pw", region: "oceania", type: "chime", note: 2959.96, tag: "F#7 Chime" },
+            { name: "Papua New Guinea", code: "pg", region: "oceania", type: "kick", note: 220, tag: "Tribal Drum" },
+            { name: "Samoa", code: "ws", region: "oceania", type: "clap", note: 600, tag: "Island Clap" },
+            { name: "Solomon Islands", code: "sb", region: "oceania", type: "chime", note: 3951.07, tag: "B7 Chime" },
+            { name: "Tonga", code: "to", region: "oceania", type: "clap", note: 660, tag: "Heavy Clap" },
+            { name: "Tuvalu", code: "tv", region: "oceania", type: "chime", note: 4434.92, tag: "C#8 Chime" },
+            { name: "Vanuatu", code: "vu", region: "oceania", type: "chime", note: 4698.63, tag: "D8 Chime" },
+
+            // Overseas Territories & Dependencies
+            { name: "Greenland", code: "gl", region: "territories", type: "chime", note: 1500, tag: "Ice Chime" },
+            { name: "Puerto Rico", code: "pr", region: "territories", type: "clap", note: 520, tag: "Latin Clap" },
+            { name: "French Polynesia", code: "pf", region: "territories", type: "chime", note: 1800, tag: "Tahiti Chime" },
+            { name: "Bermuda", code: "bm", region: "territories", type: "synth", note: 600, tag: "Island Synth" },
+            { name: "Guam", code: "gu", region: "territories", type: "kick", note: 145, tag: "Pacific Kick" },
+            { name: "Faroe Islands", code: "fo", region: "territories", type: "bass", note: 160, tag: "Nordic Bass" },
+            { name: "Gibraltar", code: "gi", region: "territories", type: "snare", note: 1350, tag: "Rock Snare" },
+            { name: "Cayman Islands", code: "ky", region: "territories", type: "chime", note: 2100, tag: "Gold Chime" },
+            { name: "New Caledonia", code: "nc", region: "territories", type: "synth", note: 750, tag: "Coral Synth" },
+            { name: "Aruba", code: "aw", region: "territories", type: "clap", note: 590, tag: "Aruba Snap" },
+            { name: "Western Sahara", code: "eh", region: "territories", type: "hihat", note: 9700, tag: "Desert Hat" }
+        ];
+
+        const regions = [
+            { id: "all", label: "🌍 All Flags" },
+            { id: "europe", label: "🇪🇺 Europe" },
+            { id: "asia", label: "🌏 Asia" },
+            { id: "africa", label: "🌍 Africa" },
+            { id: "north_america", label: "🌎 North America" },
+            { id: "south_america", label: "🌎 South America" },
+            { id: "oceania", label: "🌏 Oceania" },
+            { id: "territories", label: "🏝️ Overseas Territories" },
+            { id: "your_countries", label: "⭐ Your Countries" }
+        ];
+
+        const realCountryAnimations = [
+            'animSpinFast', 'animGoCrazy', 'anim3DFlip', 'animElasticBounce', 'animSuperWave',
+            'animHyperPulse', 'animBarrelRoll', 'animZigZag', 'animJellyWiggle', 'animOrbitTilt'
+        ];
+
+        let currentRegion = 'all';
+        const activeLoops = new Map();
+        const flagAnimProfiles = [];
+        let autoJamInterval = null;
+
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx;
+
+        function initAudio() {
+            if (!audioCtx) audioCtx = new AudioContext();
+        }
+
+        /* --- GENERATE 200+ SOUNDS & ANIMATIONS IN MODAL --- */
+        function populateStudioSelectors() {
+            const soundSelect = document.getElementById('soundSelect');
+            const animSelect = document.getElementById('animSelect');
+            soundSelect.innerHTML = '';
+            animSelect.innerHTML = '';
+
+            const soundCategories = [
+                { type: 'cosmicSynth', name: 'Cosmic Synth' },
+                { type: 'laserBass', name: 'Laser Bass' },
+                { type: 'glitchPerc', name: 'Glitch Perc' },
+                { type: 'crystalBell', name: 'Crystal Bell' },
+                { type: 'subDrop', name: 'Sub Drop' },
+                { type: 'synth', name: 'Synth Lead' },
+                { type: 'bass', name: 'Groove Bass' },
+                { type: 'chime', name: 'Bright Chime' }
+            ];
+
+            let soundCount = 0;
+            soundCategories.forEach(cat => {
+                for (let octave = 1; octave <= 25; octave++) {
+                    soundCount++;
+                    const freq = Math.round(50 * Math.pow(1.15, octave));
+                    const option = document.createElement('option');
+                    option.value = `${cat.type}|${freq}|${cat.name} #${octave}`;
+                    option.innerText = `🎵 ${cat.name} (Pitch Tier #${octave} - ${freq}Hz)`;
+                    soundSelect.appendChild(option);
+                }
+            });
+
+            const baseAnims = [
+                { id: 'animCustomCubeSpin', name: '🎲 3D Cube Spin' },
+                { id: 'animCustomWarpStretch', name: '🌀 Warp Stretch' },
+                { id: 'animCustomPulseGlow', name: '✨ Pulse Glow' },
+                { id: 'animCustomBounceCascade', name: '⚽ Bounce Cascade' },
+                { id: 'animCustomOrbitalWobble', name: '🪐 Orbital Wobble' },
+                { id: 'animSpinFast', name: '🌀 Fast Spin' },
+                { id: 'animGoCrazy', name: '🤪 Go Crazy' },
+                { id: 'anim3DFlip', name: '🔄 3D Flip' },
+                { id: 'animElasticBounce', name: '💥 Elastic Bounce' },
+                { id: 'animSuperWave', name: '🌊 Super Wave' }
+            ];
+
+            const speeds = [
+                { val: '0.15s', label: 'Hyper Ultra Fast' },
+                { val: '0.3s', label: 'Super Fast' },
+                { val: '0.5s', label: 'Bouncy Medium' },
+                { val: '0.8s', label: 'Smooth Groove' },
+                { val: '1.2s', label: 'Slow Motion' }
+            ];
+
+            const directions = ['alternate', 'normal', 'reverse', 'alternate-reverse'];
+
+            let animCount = 0;
+            baseAnims.forEach(anim => {
+                speeds.forEach(spd => {
+                    directions.forEach(dir => {
+                        animCount++;
+                        if (animCount <= 200) {
+                            const option = document.createElement('option');
+                            option.value = `${anim.id}|${spd.val}|${dir}`;
+                            option.innerText = `${anim.name} [${spd.label} - ${dir}]`;
+                            animSelect.appendChild(option);
+                        }
+                    });
+                });
+            });
+        }
+
+        function playSoundCustom(type, freq, duration = 0.3) {
+            initAudio();
+            const now = audioCtx.currentTime;
+
+            if (type === 'cosmicSynth') {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(freq, now);
+                osc.frequency.exponentialRampToValueAtTime(freq * 2.5, now + duration);
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + duration);
+            } else if (type === 'laserBass') {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(freq * 3, now);
+                osc.frequency.exponentialRampToValueAtTime(freq, now + 0.1);
+                gain.gain.setValueAtTime(0.6, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + duration);
+            } else if (type === 'glitchPerc') {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(freq, now);
+                osc.frequency.setValueAtTime(freq / 2, now + 0.05);
+                gain.gain.setValueAtTime(0.4, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + 0.12);
+            } else if (type === 'crystalBell') {
+                const osc1 = audioCtx.createOscillator();
+                const osc2 = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc1.type = 'sine';
+                osc2.type = 'sine';
+                osc1.frequency.setValueAtTime(freq, now);
+                osc2.frequency.setValueAtTime(freq * 2.75, now);
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + duration * 2);
+                osc1.connect(gain);
+                osc2.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc1.start(now);
+                osc2.start(now);
+                osc1.stop(now + duration * 2);
+                osc2.stop(now + duration * 2);
+            } else if (type === 'subDrop') {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, now);
+                osc.frequency.exponentialRampToValueAtTime(30, now + 0.4);
+                gain.gain.setValueAtTime(0.8, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + 0.45);
+            } else if (type === 'synth') {
+                const osc1 = audioCtx.createOscillator();
+                const osc2 = audioCtx.createOscillator();
+                const filter = audioCtx.createBiquadFilter();
+                const gain = audioCtx.createGain();
+                osc1.type = 'sawtooth';
+                osc2.type = 'square';
+                osc1.frequency.setValueAtTime(freq, now);
+                osc2.frequency.setValueAtTime(freq * 1.005, now);
+                filter.type = 'lowpass';
+                filter.frequency.setValueAtTime(freq * 4, now);
+                filter.frequency.exponentialRampToValueAtTime(freq, now + duration);
+                gain.gain.setValueAtTime(0.25, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+                osc1.connect(filter);
+                osc2.connect(filter);
+                filter.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc1.start(now);
+                osc2.start(now);
+                osc1.stop(now + duration);
+                osc2.stop(now + duration);
+            } else if (type === 'bass') {
+                const osc = audioCtx.createOscillator();
+                const filter = audioCtx.createBiquadFilter();
+                const gain = audioCtx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(freq, now);
+                filter.type = 'lowpass';
+                filter.frequency.setValueAtTime(freq * 3, now);
+                filter.frequency.exponentialRampToValueAtTime(freq, now + duration);
+                gain.gain.setValueAtTime(0.4, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+                osc.connect(filter);
+                filter.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + duration);
+            } else if (type === 'chime') {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, now);
+                gain.gain.setValueAtTime(0.35, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + duration * 1.5);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + duration * 1.5);
+            } else if (type === 'kick') {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.frequency.setValueAtTime(140, now);
+                osc.frequency.exponentialRampToValueAtTime(30, now + 0.15);
+                gain.gain.setValueAtTime(0.8, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + 0.2);
+            } else if (type === 'snare') {
+                const noise = audioCtx.createBufferSource();
+                const buffer = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.2, audioCtx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < buffer.length; i++) data[i] = Math.random() * 2 - 1;
+                noise.buffer = buffer;
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = 'bandpass';
+                filter.frequency.value = 1800;
+                filter.Q.value = 1;
+                const gain = audioCtx.createGain();
+                gain.gain.setValueAtTime(0.5, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+                noise.connect(filter);
+                filter.connect(gain);
+                gain.connect(audioCtx.destination);
+                noise.start(now);
+            } else if (type === 'clap') {
+                const noise = audioCtx.createBufferSource();
+                const buffer = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.25, audioCtx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < buffer.length; i++) data[i] = Math.random() * 2 - 1;
+                noise.buffer = buffer;
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = 'highpass';
+                filter.frequency.value = 1200;
+                const gain = audioCtx.createGain();
+                gain.gain.setValueAtTime(0.4, now);
+                gain.gain.setValueAtTime(0.1, now + 0.015);
+                gain.gain.setValueAtTime(0.5, now + 0.03);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+                noise.connect(filter);
+                filter.connect(gain);
+                gain.connect(audioCtx.destination);
+                noise.start(now);
+            } else if (type === 'hihat') {
+                const noise = audioCtx.createBufferSource();
+                const buffer = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.08, audioCtx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < buffer.length; i++) data[i] = Math.random() * 2 - 1;
+                noise.buffer = buffer;
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = 'highpass';
+                filter.frequency.value = 7000;
+                const gain = audioCtx.createGain();
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.07);
+                noise.connect(filter);
+                filter.connect(gain);
+                gain.connect(audioCtx.destination);
+                noise.start(now);
+            }
+        }
+
+        const glowColors = ['#ff0055', '#00e5ff', '#ffbe0b', '#00ff66', '#ff00ff', '#7000ff'];
+
+        function registerCountryAnim(index, animOverride) {
+            const country = countries[index];
+            
+            if (animOverride) {
+                const parts = animOverride.split('|');
+                flagAnimProfiles[index] = {
+                    name: parts[0],
+                    speed: parts[1] || '0.3s',
+                    delay: '0s',
+                    direction: parts[2] || 'alternate'
+                };
+            } else {
+                const animName = realCountryAnimations[index % realCountryAnimations.length];
+                const animSpeed = (0.28 + ((index * 7) % 55) / 100).toFixed(2);
+                const animDelay = ((index * 3) % 40 / 100).toFixed(2);
+                const directions = ['alternate', 'normal', 'reverse', 'alternate-reverse'];
+                const animDir = directions[index % directions.length];
+
+                flagAnimProfiles[index] = {
+                    name: animName,
+                    speed: `${animSpeed}s`,
+                    delay: `${animDelay}s`,
+                    direction: animDir
+                };
+            }
+        }
+
+        countries.forEach((_, i) => registerCountryAnim(i));
+
+        function setupTabs() {
+            const tabContainer = document.getElementById('tabContainer');
+            tabContainer.innerHTML = '';
+
+            regions.forEach(reg => {
+                const btn = document.createElement('button');
+                btn.className = `tab-btn ${reg.id === currentRegion ? 'active' : ''}`;
+                btn.innerText = reg.label;
+                btn.onclick = () => {
+                    currentRegion = reg.id;
+                    setupTabs();
+                    renderGrid();
+                };
+                tabContainer.appendChild(btn);
+            });
+        }
+
+        function renderGrid() {
+            const grid = document.getElementById('flagGrid');
+            grid.innerHTML = '';
+
+            const filtered = countries.filter(c => currentRegion === 'all' || c.region === currentRegion);
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="empty-msg">✨ "Your Countries" is currently empty! Click <b>"➕ Create Custom Country"</b> above to draw your own flag!</div>`;
+                return;
+            }
+
+            countries.forEach((country, index) => {
+                if (currentRegion !== 'all' && country.region !== currentRegion) return;
+
+                const card = document.createElement('div');
+                card.className = `flag-card ${activeLoops.has(index) ? 'active' : ''}`;
+
+                const glowColor = glowColors[index % glowColors.length];
+                card.style.setProperty('--glow-color', glowColor);
+
+                const flagUrl = country.customSrc ? country.customSrc : `https://flagcdn.com/w160/${country.code}.png`;
+
+                let deleteBtnHtml = '';
+                if (country.region === 'your_countries') {
+                    deleteBtnHtml = `<button class="delete-card-btn" title="Delete Country" onclick="deleteCustomCountry(event, ${index})">✕</button>`;
+                }
+
+                card.innerHTML = `
+                    ${deleteBtnHtml}
+                    <div class="flag-wrapper">
+                        <img class="flag-img" id="flag-img-${index}" src="${flagUrl}" alt="${country.name} Flag" loading="lazy">
+                    </div>
+                    <div class="country-name">${country.name}</div>
+                    <div class="instrument-tag">🎵 ${country.tag}</div>
+                `;
+
+                if (activeLoops.has(index)) {
+                    setTimeout(() => applyUniqueAnimation(index), 0);
+                }
+
+                card.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('delete-card-btn')) return;
+                    toggleFlagBeat(index);
+                });
+
+                grid.appendChild(card);
+            });
+        }
+
+        function deleteCustomCountry(event, index) {
+            event.stopPropagation();
+            if (activeLoops.has(index)) {
+                clearInterval(activeLoops.get(index));
+                activeLoops.delete(index);
+            }
+            countries.splice(index, 1);
+            flagAnimProfiles.splice(index, 1);
+            
+            // Re-index remaining profiles
+            flagAnimProfiles.length = 0;
+            countries.forEach((c, idx) => {
+                registerCountryAnim(idx, c.animValString);
+            });
+
+            renderGrid();
+        }
+
+        function applyUniqueAnimation(index) {
+            const img = document.getElementById(`flag-img-${index}`);
+            if (!img) return;
+            const profile = flagAnimProfiles[index];
+
+            img.style.animationName = profile.name;
+            img.style.animationDuration = profile.speed;
+            img.style.animationDelay = profile.delay;
+            img.style.animationDirection = profile.direction;
+        }
+
+        function toggleFlagBeat(index) {
+            initAudio();
+            const country = countries[index];
+
+            if (activeLoops.has(index)) {
+                clearInterval(activeLoops.get(index));
+                activeLoops.delete(index);
+                renderGrid();
+            } else {
+                playSoundCustom(country.type, country.note);
+                
+                let intervalTime = 500;
+                if (country.type === 'kick' || country.type === 'subDrop') intervalTime = 500;
+                else if (country.type === 'snare' || country.type === 'clap') intervalTime = 1000;
+                else if (country.type === 'hihat' || country.type === 'glitchPerc') intervalTime = 250;
+                else intervalTime = 500;
+
+                const intervalId = setInterval(() => {
+                    playSoundCustom(country.type, country.note);
+                }, intervalTime);
+
+                activeLoops.set(index, intervalId);
+                renderGrid();
+            }
+        }
+
+        function stopAllBeats() {
+            activeLoops.forEach((intervalId) => clearInterval(intervalId));
+            activeLoops.clear();
+
+            if (autoJamInterval) {
+                clearInterval(autoJamInterval);
+                autoJamInterval = null;
+                document.getElementById('autoSongBtn').classList.remove('playing');
+                document.getElementById('autoSongBtn').innerHTML = '✨ Random Auto Jam';
+            }
+
+            renderGrid();
+        }
+
+        function toggleAutoSong() {
+            initAudio();
+            const btn = document.getElementById('autoSongBtn');
+
+            if (autoJamInterval) {
+                stopAllBeats();
+            } else {
+                stopAllBeats();
+                btn.classList.add('playing');
+                btn.innerHTML = '⏸️ Stop Auto Jam';
+
+                const kicks = countries.filter(c => c.type === 'kick' || c.type === 'subDrop');
+                const snares = countries.filter(c => c.type === 'snare' || c.type === 'clap');
+                const hihats = countries.filter(c => c.type === 'hihat' || c.type === 'glitchPerc');
+                const synths = countries.filter(c => c.type === 'synth' || c.type === 'chime' || c.type === 'cosmicSynth' || c.type === 'crystalBell');
+
+                const randomKick = countries.indexOf(kicks[Math.floor(Math.random() * kicks.length)]);
+                const randomSnare = countries.indexOf(snares[Math.floor(Math.random() * snares.length)]);
+                const randomHiHat = countries.indexOf(hihats[Math.floor(Math.random() * hihats.length)]);
+                const randomSynth = countries.indexOf(synths[Math.floor(Math.random() * synths.length)]);
+
+                toggleFlagBeat(randomKick);
+                setTimeout(() => toggleFlagBeat(randomSnare), 250);
+                setTimeout(() => toggleFlagBeat(randomHiHat), 125);
+                setTimeout(() => toggleFlagBeat(randomSynth), 500);
+
+                autoJamInterval = setInterval(() => {
+                    const nextSynth = countries.indexOf(synths[Math.floor(Math.random() * synths.length)]);
+                    playSoundCustom(countries[nextSynth].type, countries[nextSynth].note);
+                }, 500);
+            }
+        }
+
+        /* --- DRAWING CANVAS LOGIC --- */
+        const canvas = document.getElementById('flagCanvas');
+        const ctx = canvas.getContext('2d');
+        let isDrawing = false;
+
+        function clearCanvas() {
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+        clearCanvas();
+
+        function startDrawing(e) {
+            isDrawing = true;
+            draw(e);
+        }
+
+        function stopDrawing() {
+            isDrawing = false;
+            ctx.beginPath();
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            const rect = canvas.getBoundingClientRect();
+            const x = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
+            const y = (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top;
+
+            ctx.lineWidth = document.getElementById('brushSize').value;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = document.getElementById('brushColor').value;
+
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+        }
+
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('touchstart', startDrawing);
+        canvas.addEventListener('touchend', stopDrawing);
+        canvas.addEventListener('touchmove', draw);
+
+        function openModal() {
+            document.getElementById('creatorModal').classList.add('open');
+        }
+
+        function closeModal() {
+            document.getElementById('creatorModal').classList.remove('open');
+        }
+
+        function saveCustomCountry() {
+            const name = document.getElementById('newCountryName').value.trim() || "My Country";
+            const soundVal = document.getElementById('soundSelect').value.split('|');
+            const animVal = document.getElementById('animSelect').value;
+
+            const flagDataUrl = canvas.toDataURL("image/png");
+
+            const newCountry = {
+                name: name,
+                code: 'custom_' + Date.now(),
+                region: 'your_countries',
+                customSrc: flagDataUrl,
+                type: soundVal[0],
+                note: parseFloat(soundVal[1]),
+                tag: soundVal[2],
+                animValString: animVal
+            };
+
+            countries.push(newCountry);
+            const newIndex = countries.length - 1;
+            registerCountryAnim(newIndex, animVal);
+
+            closeModal();
+            clearCanvas();
+
+            currentRegion = 'your_countries';
+            setupTabs();
+            renderGrid();
+        }
+
+        // Initial setup
+        populateStudioSelectors();
+        setupTabs();
+        renderGrid();
+    </script>
+</body>
+</html>
